@@ -1,0 +1,38 @@
+# Configuración de Manus para Generala Reloaded
+
+# Nombre de la aplicación
+APP_NAME=generala-reloaded
+
+# Descripción
+APP_DESCRIPTION=Anotador de Generala con reconocimiento de voz en español
+
+# Versión
+APP_VERSION=2.0.0
+
+# Puerto
+PORT=3000
+
+# Entorno
+NODE_ENV=production
+
+# Comando de construcción
+BUILD_CMD=pnpm install && pnpm build
+
+# Comando de inicio
+START_CMD=NODE_ENV=production node dist/index.js
+
+# Memoria máxima
+MAX_MEMORY=512m
+
+# Timeout de inicio
+STARTUP_TIMEOUT=60s
+
+# Health check
+HEALTH_CHECK_PATH=/
+HEALTH_CHECK_INTERVAL=30s
+
+# Logs
+LOG_LEVEL=info
+
+# Características
+FEATURES=voice-recognition,multi-player,responsive-design,spanish-language
