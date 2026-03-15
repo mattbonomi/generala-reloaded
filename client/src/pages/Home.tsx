@@ -169,16 +169,25 @@ export default function GeneralaScorecard() {
       }
 
       if (result.category && result.score !== null && targetPlayer) {
-        setScore(targetPlayer.id, result.category, result.score);
-        const catName = CATEGORY_NAMES[result.category] || result.category;
-        const confidence = Math.round(result.confidence * 100);
-        showToast(
-          `✓ ${result.score} pts en ${catName} para ${targetPlayer.name} (${confidence}% confianza)`,
-          "success"
-        );
+        const validScores = VALID_SCORES[result.category];
+        if (validScores && validScores.includes(result.score)) {
+          setScore(targetPlayer.id, result.category, result.score);
+          const catName = CATEGORY_NAMES[result.category] || result.category;
+          const confidence = Math.round(result.confidence * 100);
+          const scoreDisplay = result.score === 0 ? "Tachado" : `${result.score} pts`;
+          showToast(
+            `✓ ${scoreDisplay} en ${catName} para ${targetPlayer.name} (${confidence}% confianza)`,
+            "success"
+          );
+        } else {
+          showToast(
+            `Puntuación inválida para ${CATEGORY_NAMES[result.category]}: ${result.score}`,
+            "error"
+          );
+        }
       } else {
         showToast(
-          `No se pudo interpretar: "${transcript}". Usa frases como "cuatro al seis" o "escalera servida".`,
+          `No se pudo interpretar: "${transcript}". Usa frases como "cuatro al seis" o "tachar escalera".`,
           "error"
         );
       }

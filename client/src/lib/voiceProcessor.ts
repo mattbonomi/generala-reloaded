@@ -180,7 +180,53 @@ export function processVoiceCommand(transcript: string): VoiceCommandResult {
   }
 
   // Check for "tachar", "cero" or "raya" (cross out)
-  if (text.includes("tachar") || text.includes("raya") || text.includes("cero")) {
+  if (text.includes("tachar") || text.includes("raya")) {
+    // Check for special categories first
+    if (text.includes("doble") && (text.includes("generala") || text.includes("general"))) {
+      return {
+        category: "dobleGenerala",
+        score: 0,
+        confidence: 0.95,
+        debugInfo: `${debugInfo} -> Matched: Cross out Doble Generala`,
+      };
+    }
+    
+    if (text.includes("escalera")) {
+      return {
+        category: "escalera",
+        score: 0,
+        confidence: 0.95,
+        debugInfo: `${debugInfo} -> Matched: Cross out Escalera`,
+      };
+    }
+    
+    if (text.includes("full")) {
+      return {
+        category: "full",
+        score: 0,
+        confidence: 0.95,
+        debugInfo: `${debugInfo} -> Matched: Cross out Full`,
+      };
+    }
+    
+    if (text.includes("poker")) {
+      return {
+        category: "poker",
+        score: 0,
+        confidence: 0.95,
+        debugInfo: `${debugInfo} -> Matched: Cross out Poker`,
+      };
+    }
+    
+    if (text.includes("generala") || text.includes("general")) {
+      return {
+        category: "generala",
+        score: 0,
+        confidence: 0.95,
+        debugInfo: `${debugInfo} -> Matched: Cross out Generala`,
+      };
+    }
+    
     // Try to find which number category they're referring to
     const numbers = extractNumbersInOrder(text);
     if (numbers.length > 0) {
@@ -201,6 +247,22 @@ export function processVoiceCommand(transcript: string): VoiceCommandResult {
       confidence: 0,
       debugInfo: `${debugInfo} -> Cross out command but no category found`,
     };
+  }
+
+  // Check for "cero" (zero) - but only for number categories
+  if (text.includes("cero")) {
+    const numbers = extractNumbersInOrder(text);
+    if (numbers.length > 0) {
+      const categoryNum = numbers[0].value;
+      if (categoryNum >= 1 && categoryNum <= 6) {
+        return {
+          category: categoryNum.toString() as Category,
+          score: 0,
+          confidence: 0.9,
+          debugInfo: `${debugInfo} -> Matched: Zero for category ${categoryNum}`,
+        };
+      }
+    }
   }
 
   // Handle number categories (1-6)
@@ -314,9 +376,19 @@ export const TEST_CASES: TestCase[] = [
   { input: "generala servida", expectedCategory: "generala", expectedScore: 55 },
   { input: "doble generala", expectedCategory: "dobleGenerala", expectedScore: 100 },
 
-  // Cross out (tachar)
+  // Cross out (tachar) - Numbers
   { input: "tachar seis", expectedCategory: "6", expectedScore: 0 },
   { input: "raya tres", expectedCategory: "3", expectedScore: 0 },
+  { input: "tachar uno", expectedCategory: "1", expectedScore: 0 },
+
+  // Cross out (tachar) - Special categories
+  { input: "tachar escalera", expectedCategory: "escalera", expectedScore: 0 },
+  { input: "tachar full", expectedCategory: "full", expectedScore: 0 },
+  { input: "tachar poker", expectedCategory: "poker", expectedScore: 0 },
+  { input: "tachar generala", expectedCategory: "generala", expectedScore: 0 },
+  { input: "tachar doble generala", expectedCategory: "dobleGenerala", expectedScore: 0 },
+  { input: "raya escalera", expectedCategory: "escalera", expectedScore: 0 },
+  { input: "raya full", expectedCategory: "full", expectedScore: 0 },
 
   // Single numbers (ambiguous - should default to 1 die)
   { input: "seis", expectedCategory: "6", expectedScore: 6 },

@@ -1,0 +1,31 @@
+{
+  "name": "Generala Reloaded",
+  "version": "2.0.0",
+  "description": "Anotador de Generala con reconocimiento de voz inteligente en español",
+  "type": "web-application",
+  "runtime": "nodejs",
+  "port": 3000,
+  "buildCommand": "pnpm install && pnpm build",
+  "startCommand": "NODE_ENV=production node dist/index.js",
+  "environment": {
+    "NODE_ENV": "production"
+  },
+  "features": [
+    "voice-recognition",
+    "real-time-scoring",
+    "multi-player",
+    "responsive-design",
+    "spanish-language"
+  ],
+  "author": "Mattbonomi",
+  "license": "MIT",
+  "repository": "https://github.com/mattbonomi/generala-reloaded",
+  "keywords": [
+    "generala",
+    "yahtzee",
+    "dice-game",
+    "voice-recognition",
+    "spanish",
+    "scorecard"
+  ]
+}
